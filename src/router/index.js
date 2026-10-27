@@ -43,6 +43,12 @@ const routes = [
         component: () => import('../views/admin/FleetView.vue'),
         meta: { requiresAdmin: true },
       },
+      {
+        path: 'defects',
+        name: 'AdminDefects',
+        component: () => import('../views/admin/DefectsView.vue'),
+        meta: { requiresAdmin: true },
+      },
     ],
   },
   {
