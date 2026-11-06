@@ -12,21 +12,26 @@ export const useOperatorStore = defineStore('operators', () => {
     total: 0,
   })
 
-  async function fetchOperators(search = '', status = '', page = 1) {
+  async function fetchOperators(search = '', status = '', shift = '', role = '', page = 1) {
     loading.value = true
     error.value = null
     try {
       const params = new URLSearchParams()
       if (search) params.append('search', search)
       if (status) params.append('status', status)
+      if (shift) params.append('shift', shift)
+      if (role) params.append('role', role)
       params.append('page', page)
+      params.append('per_page', '50')
 
       const response = await api.get(`/admin/operators?${params.toString()}`)
       operators.value = response.data.data
-      pagination.value = {
-        currentPage: response.data.meta.current_page,
-        lastPage: response.data.meta.last_page,
-        total: response.data.meta.total,
+      if (response.data.meta) {
+        pagination.value = {
+          currentPage: response.data.meta.current_page,
+          lastPage: response.data.meta.last_page,
+          total: response.data.meta.total,
+        }
       }
     } catch (err) {
       error.value = err.response?.data?.message || 'Error al obtener la lista de operadores'
@@ -73,9 +78,22 @@ export const useOperatorStore = defineStore('operators', () => {
       if (idx !== -1) {
         operators.value[idx].is_active = updated.is_active
       }
-      return { success: true }
+      return { success: true, data: updated }
     } catch (err) {
       return { success: false, message: err.response?.data?.message || 'Error al alternar estado' }
+    }
+  }
+
+  async function deleteOperator(id) {
+    loading.value = true
+    try {
+      const response = await api.delete(`/admin/operators/${id}`)
+      await fetchOperators()
+      return { success: true, message: response.data.message }
+    } catch (err) {
+      return { success: false, message: err.response?.data?.message || 'Error al eliminar operador' }
+    } finally {
+      loading.value = false
     }
   }
 
@@ -88,5 +106,6 @@ export const useOperatorStore = defineStore('operators', () => {
     createOperator,
     updateOperator,
     toggleStatus,
+    deleteOperator,
   }
 })
