@@ -163,13 +163,28 @@
               </span>
               <p class="text-xs text-slate-500 mt-1 font-medium">{{ vehicle.vehicle_type?.name || 'Tracto / Unidad' }}</p>
             </div>
-            <span
-              class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold"
-              :class="getStatusBadgeClass(vehicle.status)"
-            >
-              <span class="w-1.5 h-1.5 rounded-full mr-1.5" :class="getStatusDotClass(vehicle.status)"></span>
-              {{ vehicle.status_label || getStatusLabelFallback(vehicle.status) }}
-            </span>
+            <div class="flex flex-col items-end space-y-1.5">
+              <span
+                class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold"
+                :class="getStatusBadgeClass(vehicle.status)"
+              >
+                <span class="w-1.5 h-1.5 rounded-full mr-1.5" :class="getStatusDotClass(vehicle.status)"></span>
+                {{ vehicle.status_label || getStatusLabelFallback(vehicle.status) }}
+              </span>
+
+              <!-- Acceso directo al defecto en taller si está en mantenimiento -->
+              <router-link
+                v-if="vehicle.status === 'in_maintenance'"
+                :to="{ path: '/admin/defects', query: { search: vehicle.plate_number } }"
+                class="inline-flex items-center text-[10px] font-bold text-amber-700 hover:text-amber-900 bg-amber-50 hover:bg-amber-100 px-2 py-0.5 rounded-md border border-amber-200 transition-colors shadow-2xs"
+                title="Ver observaciones y defectos reportados para esta unidad"
+              >
+                <svg class="w-3 h-3 mr-1 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <span>Ver en Taller</span>
+              </router-link>
+            </div>
           </div>
 
           <!-- Datos técnicos -->
@@ -195,6 +210,20 @@
             <div v-if="vehicle.vin" class="flex justify-between text-[11px]">
               <span class="text-slate-400">VIN / Chasis:</span>
               <span class="font-mono text-slate-500">{{ vehicle.vin }}</span>
+            </div>
+
+            <!-- Acceso a Telemetría de la Unidad -->
+            <div class="flex justify-between items-center pt-1.5 border-t border-slate-200/60 text-[11px]">
+              <span class="text-slate-400 font-medium">Hardware:</span>
+              <router-link
+                :to="{ path: '/admin/telematics', query: { search: vehicle.plate_number } }"
+                class="inline-flex items-center space-x-1 font-semibold text-teal-700 hover:text-teal-900 bg-teal-50 hover:bg-teal-100 px-2 py-0.5 rounded border border-teal-200 transition-colors shadow-2xs"
+                title="Ver hardware telemático y ejecutar ping"
+              >
+                <span>🛰️ GPS 4G</span>
+                <span class="text-teal-400">•</span>
+                <span>Equipos</span>
+              </router-link>
             </div>
           </div>
         </div>
