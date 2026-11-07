@@ -328,10 +328,12 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import { useDefectsStore } from '../../stores/defects'
 import ResolveDefectModal from '../../components/admin/ResolveDefectModal.vue'
 
+const route = useRoute()
 const defectsStore = useDefectsStore()
 
 const searchTerm = ref('')
@@ -437,7 +439,19 @@ const formatDate = (isoString) => {
   }
 }
 
+watch(
+  () => route.query.search,
+  (newSearch) => {
+    if (newSearch) {
+      searchTerm.value = String(newSearch)
+    }
+  }
+)
+
 onMounted(() => {
+  if (route.query.search) {
+    searchTerm.value = String(route.query.search)
+  }
   loadDefects()
 })
 </script>
