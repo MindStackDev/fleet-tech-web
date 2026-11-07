@@ -63,6 +63,20 @@
             <span class="w-2 h-2 rounded-full bg-rose-500"></span>
           </div>
         </router-link>
+
+        <router-link
+          to="/admin/telematics"
+          class="flex items-center space-x-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition-colors"
+          :class="route.name === 'AdminTelematics' ? 'bg-teal-600 text-white shadow-sm' : 'text-slate-300 hover:bg-slate-800 hover:text-white'"
+        >
+          <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+          </svg>
+          <div class="flex items-center justify-between flex-1">
+            <span>Hardware Telemático</span>
+            <span class="w-2 h-2 rounded-full bg-teal-400"></span>
+          </div>
+        </router-link>
       </nav>
 
       <!-- Perfil y Logout -->
@@ -135,6 +149,8 @@ const currentTitle = computed(() => {
       return 'Monitoreo de Flota en Patio'
     case 'AdminDefects':
       return 'Triage de Defectos y Taller Mecánico'
+    case 'AdminTelematics':
+      return 'Hardware Telemático & Dispositivos de Flota'
     default:
       return 'Panel de Administración'
   }
